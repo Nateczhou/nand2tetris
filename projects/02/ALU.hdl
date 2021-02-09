@@ -43,4 +43,29 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+    // zero the x input? ,zx
+    // x and not zx
+    // use this trick to invert zx into 16 bits
+    Mux16(a=x, b=false, sel=zx, out=outzx);
+
+    // negate the x input? ,nx
+    Not16(in=outzx, out=notoutzx);
+    Mux16(a=outzx, b=notoutzx, sel=nx, out=outnx);
+
+
+    // zero the y input? ,zy
+    Mux16(a=y, b=false, sel=zy, out=outzy);
+
+    // negate the y input? ,ny
+    Not16(in=outzy, out=notoutzy);
+    Mux16(a=outzy, b=notoutzy, sel=ny, out=outny);
+
+    // compute out = x + y (if 1) or x & y (if 0) ,f
+    And16(a=outnx, b=outny, out=andxy);
+    Add16(a=outnx, b=outny, out=addxy);
+    Mux16(a=andxy, b=addxy, sel=f, out=compute);
+
+    // negate the out output? ,no
+    Not16(in=compute, out=notcompute);
+    Mux16(a=compute, b=notcompute, sel=no, out=out);
 }
