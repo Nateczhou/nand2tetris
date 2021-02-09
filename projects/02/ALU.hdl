@@ -67,5 +67,19 @@ CHIP ALU {
 
     // negate the out output? ,no
     Not16(in=compute, out=notcompute);
-    Mux16(a=compute, b=notcompute, sel=no, out=out);
+    Mux16(a=compute, b=notcompute, sel=no, out[0..7]=out1, out[8..15]=out2);
+    Or16(a[0..7]=out1, a[8..15]=out2, b=false, out=out);
+
+     //zr,  1 if (out == 0), 0 otherwise
+     Or8Way(in=out1, out=tmpzr1);
+     Or8Way(in=out1, out=tmpzr2);
+     Or(a=tmpzr1, b=tmpzr2, out=res);
+     Not(in=res, out=zr);
+
+      //  ng;  1 if (out < 0),  0 otherwise
+      And16(a[0..7]=out1, a[8..15]=out2, b[0..14]=false, b[15]=true, out[0..7]=tmpng1, out[8..15]=tmpng2);
+      Or8Way(in=tmpng1, out=or1);
+      Or8Way(in=tmpng2, out=or2);
+      Or(a=or1, b=or2, out=ng);
+
 }
