@@ -17,6 +17,7 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
+    // more comment added
     Inc16(in=prev, out=outinc);
     Mux16(a=prev, b=outinc, sel=inc, out=step1);
     Mux16(a=step1, b=in, sel=load, out=step2);
